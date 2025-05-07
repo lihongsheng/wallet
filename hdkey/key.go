@@ -1,5 +1,5 @@
 package hdkey
 
 type GenerateKey interface {
-  Generate()
+	Generate(seed []byte) (privateKey string, address string, err error)
 }

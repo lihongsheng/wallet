@@ -3,8 +3,8 @@ module wallet
 go 1.24.2
 
 require (
-	github.com/btcsuite/btcd v0.23.2
-	github.com/btcsuite/btcd/btcutil v1.1.3
+	github.com/btcsuite/btcd v0.24.0
+	github.com/btcsuite/btcd/btcutil v1.1.5
 	github.com/ethereum/go-ethereum v1.15.10
 	github.com/tyler-smith/go-bip39 v1.1.0
 )
@@ -21,6 +21,7 @@ require (
 	github.com/ethereum/c-kzg-4844 v1.0.0 // indirect
 	github.com/ethereum/go-verkle v0.2.2 // indirect
 	github.com/holiman/uint256 v1.3.2 // indirect
+	github.com/miguelmota/go-ethereum-hdwallet v0.1.3 // indirect
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/supranational/blst v0.3.14 // indirect
 	golang.org/x/crypto v0.37.0 // indirect

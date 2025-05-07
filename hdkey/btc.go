@@ -1,3 +1,8 @@
 package hdkey
 
-type Gen
+type BtcKey struct {
+}
+
+func (k *BtcKey) Generate() {
+
+}
