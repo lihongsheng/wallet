@@ -4,14 +4,23 @@ import (
 	"crypto/ecdsa"
 	"encoding/hex"
 	"errors"
+	"github.com/btcsuite/btcd/btcutil/hdkeychain"
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/crypto"
 	hdwallet "github.com/miguelmota/go-ethereum-hdwallet"
 )
 
-type EthKey struct {
-}
-
-func (k *EthKey) Generate(seed []byte) (privateKey string, address string, err error) {
+func GenerateEth(seed []byte) (privateKey string, address string, err error) {
+	// 构建 BIP44 路径 m/44'/{coin}'/{account}'/{change}/{index}
+	path := accounts.DefaultBaseDerivationPath
+	path[0] = 44 + hdkeychain.HardenedKeyStart
+	path[1] = uint32(60) + hdkeychain.HardenedKeyStart
+	// account
+	path[2] = 0 + hdkeychain.HardenedKeyStart
+	// change
+	path[3] = 0
+	// index
+	path[4] = 0
 	// by seed generate private key and address
 	wallet, err := hdwallet.NewFromSeed(seed)
 	if err != nil {
@@ -19,15 +28,14 @@ func (k *EthKey) Generate(seed []byte) (privateKey string, address string, err e
 		return "", "", err
 	}
 	// bip44  path m/44'/60'/0'/0/0
-	path := hdwallet.MustParseDerivationPath("m/44'/60'/0'/0/0")
 	// by wallet and path generate account
-	account, err := wallet.Derive(path, false)
+	accountObj, err := wallet.Derive(path, false)
 	if err != nil {
 		// if there is an error deriving the account, return the error
 		return "", "", err
 	}
 	// by account get private key
-	privateKeyObj, err := wallet.PrivateKey(account)
+	privateKeyObj, err := wallet.PrivateKey(accountObj)
 	if err != nil {
 		// 如果获取私钥时出错，返回错误信息
 		return "", "", err
@@ -47,20 +55,12 @@ func (k *EthKey) Generate(seed []byte) (privateKey string, address string, err e
 	return privateKeyHex, address, nil
 }
 
-//  CreateMasterKey() error {
-//	masterKey, err := hdkeychain.NewMaster(kg.seed, &chaincfg.MainNetParams)
-//	if err != nil {
-//		return err
-//	}
-//	kg.masterKey = masterKey
-//	return nil
-//}
-
 //
 // GetETHKeyPair 获取以太坊密钥对
 //func (kg *KeyGenerator) GetETHKeyPair() (privateKey string, address string, err error) {
+//   masterKey, err := hdkeychain.NewMaster(kg.seed, &chaincfg.MainNetParams)
 //	// 获取扩展密钥的私钥（返回 btcec.PrivateKey 类型）
-//	privKey, err := kg.masterKey.ECPrivKey()
+//	privKey, err := masterKey.ECPrivKey()
 //	if err != nil {
 //		return "", "", err
 //	}
