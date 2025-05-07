@@ -1,0 +1,3 @@
+package hdkey
+
+type Gen
