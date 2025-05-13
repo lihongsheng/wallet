@@ -13,18 +13,23 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rpc"
 )
 
 func TestTransferEthTransaction(t *testing.T) {
+	// 0xdc49981516e8e72b401a63e6405495a32dafc3939b5d6d83cc319ac0388bca1b
 	// 连接到以太坊节点，这里使用 Infura 作为示例，你需要替换为自己的 Infura 项目 ID
-	client, err := ethclient.Dial("http://127.0.0.1:8545")
+	rpcClient, err := rpc.Dial("http://127.0.0.1:65072")
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}
+	// # 使用 curl 测试 RPC 连接
+	rpcClient.SetHeader("Authorization", fmt.Sprintf("Bearer %s", "0xdc49981516e8e72b401a63e6405495a32dafc3939b5d6d83cc319ac0388bca1b"))
+	client := ethclient.NewClient(rpcClient)
 	defer client.Close()
 
 	// 发送方私钥，这里需要替换为实际的私钥
-	privateKeyStr := "4937011b55f0d01f79ac51b414d22aafba329190c2622c6f3e52172ba08916e5"
+	privateKeyStr := "04b9f63ecf84210c5366c66d68fa1f5da1fa4f634fad6dfc86178e4d79ff9e59"
 	privateKey, err := crypto.HexToECDSA(privateKeyStr)
 	if err != nil {
 		log.Fatalf("Failed to parse private key: %v", err)
@@ -36,7 +41,7 @@ func TestTransferEthTransaction(t *testing.T) {
 		log.Fatal("Failed to get public key")
 	}
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-
+	fmt.Println(fromAddress)
 	// 接收方地址，需要替换为实际的接收方地址
 	toAddress := common.HexToAddress("0xf93E22f8763f34875B1A2cC7631e899A0c4A9Cef")
 

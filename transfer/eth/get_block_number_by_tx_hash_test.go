@@ -9,6 +9,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/rpc"
+
 	"io/ioutil"
 	"log"
 	"math/big"
@@ -18,14 +20,17 @@ import (
 
 func TestGetBlockNumberByTxHash(t *testing.T) {
 	// 连接到以太坊节点，这里使用 Infura 作为示例，你需要替换为自己的 Infura 项目 ID
-	client, err := ethclient.Dial("http://127.0.0.1:8545")
+	rpcClient, err := rpc.Dial("http://127.0.0.1:65072")
 	if err != nil {
 		log.Fatalf("Failed to connect to the Ethereum client: %v", err)
 	}
+	// # 使用 curl 测试 RPC 连接
+	rpcClient.SetHeader("Authorization", fmt.Sprintf("Bearer %s", "0xdc49981516e8e72b401a63e6405495a32dafc3939b5d6d83cc319ac0388bca1b"))
+	client := ethclient.NewClient(rpcClient)
 	defer client.Close()
 
 	// 替换为实际的交易哈希
-	txHash := common.HexToHash("0xdc57570d9db9b7be4f28432b186de77727dad56609cd182af87e965cf99d4d66")
+	txHash := common.HexToHash("0x19b84fb78fce9571e0c5005e133a7dcd940fd28438ea370ff654f301bd0e6efc")
 	// 通过交易哈希获取交易收据
 	receipt, err := client.TransactionReceipt(context.Background(), txHash)
 	if err != nil {
